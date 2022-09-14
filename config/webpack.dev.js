@@ -25,4 +25,9 @@ module.exports = {
       minify: true,
     }),
   ],
+  devServer: {
+    static: path.resolve(__dirname, "../static"),
+    compress: true,
+    port: 9000,
+  },
 };

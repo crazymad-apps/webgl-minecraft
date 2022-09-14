@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack --config ./config/webpack.dev.js",
+    "start": "webpack-dev-server --config ./config/webpack.dev.js",
     "build": "webpack --config ./config/webpack.prod.js"
   },
   "repository": {
@@ -25,6 +25,7 @@
     "webpack-cli": "^4.10.0"
   },
   "devDependencies": {
-    "html-webpack-plugin": "^5.5.0"
+    "html-webpack-plugin": "^5.5.0",
+    "webpack-dev-server": "^4.11.0"
   }
 }
