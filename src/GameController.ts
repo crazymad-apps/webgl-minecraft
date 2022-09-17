@@ -9,8 +9,10 @@ export default class GameController {
   }
 
   start() {
-    const cube = get_cube_mesh();
-    this.renderer.addMeshs(cube);
+    for (let ii = 0; ii < 1; ii++) {
+      const cube = get_cube_mesh();
+      this.renderer.addMeshs(cube);
+    }
 
     this.update();
   }

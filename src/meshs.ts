@@ -7,6 +7,7 @@ import { coord_plus } from "./utils/coordinates";
  *    /|            /|
  *   0____________1  |
  *   | |          |  |
+ *   | |          |  |
  *   | 7_ _ _ _ _ |_ 6
  *   |/           | /
  *   3____________2
@@ -14,15 +15,15 @@ import { coord_plus } from "./utils/coordinates";
 export function get_cube_mesh(
   offset: [number, number, number] = [0.0, 0.0, 0.0]
 ): BaseMesh {
-  const a1 = [-0.5, 0.5, 0.5];
-  const b1 = [0.5, 0.5, 0.5];
-  const c1 = [0.5, -0.5, 0.5];
-  const d1 = [-0.5, -0.5, 0.5];
+  const a1 = [-10, 10, 10];
+  const b1 = [10, 10, 10];
+  const c1 = [10, -10, 10];
+  const d1 = [-10, -10, 10];
 
-  const a2 = [-0.5, 0.5, -0.5];
-  const b2 = [0.5, 0.5, -0.5];
-  const c2 = [0.5, -0.5, -0.5];
-  const d2 = [-0.5, -0.5, -0.5];
+  const a2 = [-10, 10, -10];
+  const b2 = [10, 10, -10];
+  const c2 = [10, -10, -10];
+  const d2 = [-10, -10, -10];
 
   const vertexs = [a1, b1, c1, d1, a2, b2, c2, d2]
     .map((coord: [number, number, number]) => coord_plus(coord, offset))
@@ -31,43 +32,20 @@ export function get_cube_mesh(
     }, []);
 
   // [front, left, top, right, back, bottom]
+  // prettier-ignore
   const indices = [
-    0,
-    1,
-    2, //  front side
-    2,
-    3,
-    0, // front side
-    0,
-    3,
-    7, // left side
-    7,
-    4,
-    0, // left side
-    0,
-    1,
-    4, // top side
-    4,
-    1,
-    5, // top side
-    5,
-    6,
-    2, // right side
-    2,
-    1,
-    6, // right side
-    6,
-    5,
-    4, // back side
-    4,
-    7,
-    6, // backside
-    6,
-    7,
-    2, // bottom side
-    2,
-    7,
-    3, // bottom side
+    0, 1, 2, // front side
+    2, 3, 0, // front side
+    0, 3, 7, // left side
+    7, 4, 0, // left side
+    0, 4, 1, // top side
+    1, 4, 5, // top side
+    5, 6, 2, // right side
+    2, 1, 5, // right side
+    5, 4, 6,// back side
+    6, 4, 7, // backside
+    7, 3, 2, // bottom side
+    2, 6, 7, // bottom side
   ];
 
   return {
