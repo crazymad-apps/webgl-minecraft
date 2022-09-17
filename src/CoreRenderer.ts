@@ -1,6 +1,7 @@
 import { BaseMesh } from "./types/BaseTypes";
 import { createProgram } from "./utils/webgl";
 import m4 from "./utils/m4";
+import CoreCamera from "./CoreCamera";
 
 let r = 0;
 
@@ -21,6 +22,8 @@ export default class CoreRender {
 
   latestTS: number = new Date().getTime();
 
+  camera: CoreCamera;
+
   constructor(id: string) {
     const container = document.getElementById(id);
     if (!container) throw new Error("Could not found container element!");
@@ -31,6 +34,8 @@ export default class CoreRender {
 
     this.initCanvas();
     this.initProgram();
+
+    this.camera = new CoreCamera(this.canvas);
 
     window.addEventListener("resize", () => this.initCanvas());
   }
@@ -105,10 +110,13 @@ export default class CoreRender {
     r += 0.005;
     r %= Math.PI * 2;
 
+    const cameraMatrix = m4.inverse(this.camera.matrix);
+    // console.log(cameraMatrix)
     let matrix = m4.perspective((60 / 180) * Math.PI, this.ratio, 1, 400);
     matrix = m4.translate(matrix, 0, 0, -200);
-    matrix = m4.yRotate(matrix, r);
-    matrix = m4.xRotate(matrix, r);
+    // matrix = m4.yRotate(matrix, r);
+    // matrix = m4.xRotate(matrix, r);
+    matrix = m4.multiply(matrix, m4.inverse(this.camera.matrix));
 
     gl.uniformMatrix4fv(matrixLocation, false, matrix);
 
