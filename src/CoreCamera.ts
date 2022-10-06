@@ -2,7 +2,7 @@ import { Vec3 } from "./types/BaseTypes";
 import m4, { Matrix4 } from "./utils/m4";
 
 export default class CoreCamera {
-  position: Vec3 = new Vec3(0, 40, 0);
+  position: Vec3 = new Vec3(0, 0, 200);
 
   direction: Vec3 = new Vec3(0, 0, -1);
 
@@ -26,7 +26,6 @@ export default class CoreCamera {
       this.position.y,
       this.position.z
     );
-    console.log("matrix", this.matrix);
 
     document.addEventListener("click", () => {
       canvas.requestPointerLock();
@@ -34,11 +33,22 @@ export default class CoreCamera {
 
     document.addEventListener("mousemove", (e) => {
       // console.log("mousemove", e.movementX, e.movementY);
-      this.heading += (e.movementX * Math.PI) / 180;
-      this.pitch += (e.movementY * Math.PI) / 180;
+      this.heading += ((e.movementX * Math.PI) / 180) * 0.1;
+      this.pitch += ((e.movementY * Math.PI) / 180) * 0.1;
 
-      this.pitch = Math.max(-Math.PI, this.heading);
-      this.pitch = Math.min(Math.PI, this.heading);
+      this.heading = Math.max(-Math.PI, this.heading);
+      this.heading = Math.min(Math.PI, this.heading);
+      // this.pitch = Math.max(Math.PI / 2, this.pitch);
+      // this.pitch = Math.min(-Math.PI / 2, this.pitch);
+
+      let tmp_m4 = m4.yRotation(this.heading);
+      tmp_m4 = m4.xRotation(this.pitch);
+
+      this.direction = m4.vec3Normalize(
+        m4.multiplyPoint(this.direction, tmp_m4)
+      );
+      this.right = m4.vec3Normalize(m4.multiplyPoint(this.right, tmp_m4));
+      this.up = m4.vec3Normalize(m4.multiplyPoint(this.up, tmp_m4));
     });
 
     document.addEventListener("keydown", (e) => {
@@ -92,9 +102,14 @@ export default class CoreCamera {
       movement.normalize().multiply(0.6);
       this.position.add(movement);
 
-      this.matrix = m4.translation(this.position.x, this.position.y, this.position.z);
-      this.matrix = m4.yRotate(this.matrix, this.heading);
-      // this.matrix = m4.xRotate(this.matrix, this.pitch);
+      // console.log(this.position)
+      this.matrix = m4.translation(
+        this.position.x,
+        this.position.y,
+        this.position.z
+      );
+      this.matrix = m4.yRotate(this.matrix, -this.heading);
+      this.matrix = m4.xRotate(this.matrix, -this.pitch);
     }, 1000 / 60);
   }
 }

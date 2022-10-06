@@ -48,8 +48,25 @@ export function get_cube_mesh(
     2, 6, 7, // bottom side
   ];
 
+  // prettier-ignore
+  const normals = [
+    0, 0, 1, // front side
+    0, 0, 1, // front size
+    0, -1, 0, // left side
+    0, -1, 0, // left side
+    1, 0, 0, // top side
+    1, 0, 0, // top side
+    0, 1, 0, // right side
+    0, 1, 0, // right side
+    0, 0, -1, // back side
+    0, 0, -1, // back side
+    -1, 0, 0, // bottom side
+    -1, 0, 0, // bittom side
+  ]
+
   return {
     vertexs,
     indices,
+    normals,
   };
 }

@@ -1,3 +1,5 @@
+import { Vec3 } from "../types/BaseTypes";
+
 // prettier-ignore
 export type Matrix4 = [
   number, number, number, number,
@@ -5,6 +7,8 @@ export type Matrix4 = [
   number, number, number, number,
   number, number, number, number
 ];
+
+let MatType = Float32Array;
 
 const m4 = {
   perspective: function (
@@ -24,6 +28,7 @@ const m4 = {
       0, 0, near * far * rangeInv * 2, 0
     ];
   },
+
   makeZToWMatrix(fudgeFactor: number): Matrix4 {
     // prettier-ignore
     return [
@@ -33,6 +38,7 @@ const m4 = {
       0, 0, 0, 1,
     ];
   },
+
   projection: function (width: number, height: number, depth: number): Matrix4 {
     // prettier-ignore
     return [
@@ -282,6 +288,32 @@ const m4 = {
           tmp_21 * m12 -
           (tmp_20 * m12 + tmp_23 * m22 + tmp_17 * m02)),
     ];
+  },
+
+  normalize(v: [number, number, number], dst?: Float32Array) {
+    dst = dst ?? new Float32Array(3);
+    var length = Math.sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
+    // make sure we don't divide by 0.
+    if (length > 0.00001) {
+      dst[0] = v[0] / length;
+      dst[1] = v[1] / length;
+      dst[2] = v[2] / length;
+    }
+    return dst;
+  },
+
+  vec3Normalize(vec3: Vec3): Vec3 {
+    const tmp = this.normalize([vec3.x, vec3.y, vec3.z]);
+
+    return new Vec3(tmp[0], tmp[1], tmp[2]);
+  },
+
+  multiplyPoint(point: Vec3, m: Matrix4): Vec3 {
+    const x = m[0] * point.x + m[1] * point.y + m[2] * point.z + m[3];
+    const y = m[4] * point.x + m[5] * point.y + m[6] * point.z + m[7];
+    const z = m[8] * point.x + m[9] * point.y + m[10] * point.z + m[11];
+
+    return new Vec3(x, y, z);
   },
 };
 
